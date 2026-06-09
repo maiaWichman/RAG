@@ -13,5 +13,6 @@ Retrieval-Augmented Generation (RAG) is a technique to augment large language mo
 
 ## Data Preparation
 
+
 ## Future Features
 - Semantic chunking (on header, paragraph, complete thought, etc) rather than by character length.

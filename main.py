@@ -1,6 +1,7 @@
 from pypdf import PdfReader
 import os
 import ollama
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 def read_pdfs(dir_path) -> dict:
     """
@@ -24,10 +25,29 @@ def read_pdfs(dir_path) -> dict:
         reader = PdfReader(os.path.join(dir_path, pdf))
         print(f"Number of pages in {pdf}: {len(reader.pages)}")
         
-        pages = [page.extract_text() for page in reader.pages]
+        pages = [page.extract_text().strip() for page in reader.pages[:10]]
         pdf_pages[pdf] = pages
 
     return pdf_pages
+
+
+def text_splitter(pdf_pages_dict, chunk_size=1000, overlap=100) -> dict:
+    pdf_chunks_dict = {}
+    for pdf, pages in pdf_pages_dict.items():
+        combined_text = ''
+        for page in pages:
+            combined_text += ' ' + page
+       
+        splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=overlap,
+            length_function=len,
+            is_separator_regex=False,
+        )
+        pdf_chunks_dict[pdf] = splitter.create_documents([combined_text ])
+
+    return pdf_chunks_dict
+
 
 
 def embed(text: str) -> list:
@@ -72,4 +92,15 @@ def embed_batch(texts: list) -> list:
     return batch['embeddings']
 
 if __name__ == "__main__":
-    pass
+    pdf_pages = read_pdfs('Data')
+
+    chunks = text_splitter(pdf_pages)
+    print(len(chunks['An Introduction to Statistical Learning with Applications in Python.pdf']))
+
+    for chunk in chunks['An Introduction to Statistical Learning with Applications in Python.pdf'][:5]:
+        print(chunk)
+        print(len(chunk.page_content))
+        print('---')
+
+
+
