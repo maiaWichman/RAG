@@ -2,7 +2,7 @@ from pypdf import PdfReader
 import os
 import ollama
 
-def _read_pdfs(dir_path) -> dict:
+def read_pdfs(dir_path) -> dict:
     """
     Get a list of PDF files in the specified directory.
     
@@ -30,7 +30,7 @@ def _read_pdfs(dir_path) -> dict:
     return pdf_pages
 
 
-def _embed(text: str) -> list:
+def embed(text: str) -> list:
     """
     Embed text using the Ollama embedding model.
     
