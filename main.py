@@ -5,7 +5,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 def read_pdfs(dir_path) -> dict:
     """
-    Get a list of PDF files in the specified directory.
+    Get a dictionary of PDF files in the specified directory with their text content.
     
     params
     -----
@@ -32,6 +32,22 @@ def read_pdfs(dir_path) -> dict:
 
 
 def text_splitter(pdf_pages_dict, chunk_size=1000, overlap=100) -> dict:
+    """
+    Split text from PDFs into chunks.
+    
+    params
+    -----
+    pdf_pages_dict: dict
+        A dictionary where keys are PDF file names and values are lists of text from each page.
+    chunk_size: int
+        The maximum character size of each text chunk.
+    overlap: int
+        The number of characters to overlap between chunks.
+
+    returns
+    -----
+    dict: A dictionary where keys are PDF file names and values are lists of text chunks.
+    """
     pdf_chunks_dict = {}
     for pdf, pages in pdf_pages_dict.items():
         combined_text = ''
